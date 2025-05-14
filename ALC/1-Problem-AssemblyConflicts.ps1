@@ -1,4 +1,4 @@
-# Install-PSResource -Name dbatools, MSAL.PS -TrustRepository -Scope CurrentUser
+. ./0-Setup.ps1 -SkipInstallAndBuild
 
 # Works
 Start-Job -ScriptBlock {
@@ -61,7 +61,10 @@ Start-Job -ScriptBlock {
     Import-Module dbatools
 
     # Ignores an interactive prompt to just load the assembly, not all modules have this
-    Import-Module MSAL.PS -ArgumentList @{ 'dll.lenientLoading' = $true; 'dll.lenientLoadingPrompt' = $false }
+    Import-Module MSAL.PS -ArgumentList @{
+        'dll.lenientLoading' = $true
+        'dll.lenientLoadingPrompt' = $false
+    }
     [AppDomain]::CurrentDomain.GetAssemblies() |
         Where-Object { $_.Location -like '*Microsoft.Identity.Client.dll' } |
         ForEach-Object {
