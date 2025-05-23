@@ -144,4 +144,21 @@ Test-RunspaceFunction foo
 # Local ''
 $rs.Dispose()
 
-# TODO: Go over CreateDefault() and CreateDefault2()
+# CreateDefault2() only loads Microsoft.PowerShell.Core by default,
+# whereas CreateDefault() loads all the modules shipped by PowerShell.
+# Ultimately not too much of a different but worth noting.
+$iisDefault = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
+$runspace = [RunspaceFactory]::CreateRunspace($iisDefault)
+$runspace.Open()
+$ps = [PowerShell]::Create($runspace)
+$ps.AddScript('Get-Command -ListImported').Invoke() | Select-Object Name, Source | Sort-Object Source, Name
+$ps.Dispose()
+$runspace.Dispose()
+
+$iisDefault2 = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault2()
+$runspace = [RunspaceFactory]::CreateRunspace($iisDefault2)
+$runspace.Open()
+$ps = [PowerShell]::Create($runspace)
+$ps.AddScript('Get-Command -ListImported').Invoke() | Select-Object Name, Source | Sort-Object Source, Name
+$ps.Dispose()
+$runspace.Dispose()
