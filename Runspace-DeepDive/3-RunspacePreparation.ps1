@@ -14,6 +14,7 @@ $iss.Commands.Add(
             "Type of Foo '$Foo' is '$($Foo.GetType().Name)'"
         }
     ))
+# $iss.Commands | ? Name -eq 'Test-Function'
 
 $rs = [RunspaceFactory]::CreateRunspace($iss)
 $rs.Open()
@@ -151,7 +152,10 @@ $iisDefault = [System.Management.Automation.Runspaces.InitialSessionState]::Crea
 $runspace = [RunspaceFactory]::CreateRunspace($iisDefault)
 $runspace.Open()
 $ps = [PowerShell]::Create($runspace)
-$ps.AddScript('Get-Command -ListImported').Invoke() | Select-Object Name, Source | Sort-Object Source, Name
+$ps.AddScript('Get-Command -ListImported').Invoke() |
+    Select-Object Name, Source |
+    Sort-Object Source, Name |
+    Format-Table
 $ps.Dispose()
 $runspace.Dispose()
 
@@ -159,6 +163,11 @@ $iisDefault2 = [System.Management.Automation.Runspaces.InitialSessionState]::Cre
 $runspace = [RunspaceFactory]::CreateRunspace($iisDefault2)
 $runspace.Open()
 $ps = [PowerShell]::Create($runspace)
-$ps.AddScript('Get-Command -ListImported').Invoke() | Select-Object Name, Source | Sort-Object Source, Name
+$ps.AddScript('Get-Command -ListImported').Invoke() |
+    Select-Object Name, Source |
+    Sort-Object Source, Name |
+    Format-Table
 $ps.Dispose()
 $runspace.Dispose()
+
+# TODO: Add APIs around PowerShell and how to enumerate the streams and host output

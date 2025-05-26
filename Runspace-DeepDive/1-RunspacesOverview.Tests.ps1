@@ -26,6 +26,8 @@ Describe "Runspace Overview" {
         } | Wait-Job
     }
 
+    # Remote-Runspaces below
+
     It "Runs Start-Job tasks in parallel" {
         # This is like Start-ThreadJob but less efficient as each job runs as
         # a separate process.
@@ -57,5 +59,21 @@ Describe "Runspace Overview" {
                 Write-Host "Finished"
             }
         }
+    }
+
+    It "Type deserialization with inter process remoting" {
+        $result = Start-Job -ScriptBlock {
+            Get-Item $pwd
+        } | Receive-Job -Wait -AutoRemoveJob
+
+        $result.PSTypeNames[0] | Should -Be "Deserialized.System.IO.DirectoryInfo"
+
+        {
+            $result.Refresh()
+        } | Should -Throw -ExpectedMessage '*`[Deserialized.System.IO.DirectoryInfo] does not contain a method named ''Refresh''.'
+
+        $result -is [System.IO.Directory] | Should -BeFalse
+
+        $result.FullName | Should -Be $pwd.Path
     }
 }

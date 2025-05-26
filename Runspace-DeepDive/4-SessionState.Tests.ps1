@@ -49,6 +49,7 @@ Describe "Session State - Bound and Unbound ScriptBlocks" {
                 Variable = $someVar
             }
         }.Ast.GetScriptBlock()
+        # [ScriptBlock]::Create(...) is another way to create an unbound scriptblock
 
         $res = & $unboundSbk
         $res.RunspaceId | Should -Be $runspaceId

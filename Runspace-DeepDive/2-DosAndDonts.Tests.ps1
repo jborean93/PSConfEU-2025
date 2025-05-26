@@ -97,7 +97,7 @@ Describe "Runspace do's and dont's" {
             ) | Set-Content -Path $file
         }
 
-        (Get-Content $file | Measure-Object -Line).Lines | Should -Not -Be 100
+        (Get-Content $file | Measure-Object -Line).Lines | Should -Not -Be 1000
     }
 
     Context ".NET Tasks are an alternative to runspaces" {
@@ -153,6 +153,8 @@ Describe "Runspace do's and dont's" {
                 'Result 3'
             )
         }
+
+        # TODO: Add delegate example to show how it can bomb with a pwsh scriptblock.
     }
 }
 

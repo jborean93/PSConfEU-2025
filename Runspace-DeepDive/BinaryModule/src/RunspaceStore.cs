@@ -20,7 +20,7 @@ internal class RunspaceSpecificStore<T>
         _factory = factory;
     }
 
-    public T GetFromTLS()
+    public T GetFromRunspace()
         => GetForRunspace(Runspace.DefaultRunspace);
 
     public T GetForRunspace(Runspace runspace)
@@ -37,7 +37,7 @@ internal class RunspaceStore
     internal const string _default = "RunspaceStoreDefault";
 
     private static RunspaceSpecificStore<RunspaceStore> _registrations = new(() => new());
-    public static RunspaceStore GetFromTLS() => _registrations.GetFromTLS();
+    public static RunspaceStore GetFromRunspace() => _registrations.GetFromRunspace();
 
     public string RunspaceField = _default;
 }
@@ -48,7 +48,7 @@ public sealed class GetRunspaceStore : PSCmdlet
 {
     protected override void EndProcessing()
     {
-        WriteObject(RunspaceStore.GetFromTLS().RunspaceField);
+        WriteObject(RunspaceStore.GetFromRunspace().RunspaceField);
     }
 }
 
@@ -60,6 +60,6 @@ public sealed class SetRunspaceStore : PSCmdlet
 
     protected override void EndProcessing()
     {
-        RunspaceStore.GetFromTLS().RunspaceField = Value;
+        RunspaceStore.GetFromRunspace().RunspaceField = Value;
     }
 }

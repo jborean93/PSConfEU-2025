@@ -29,6 +29,7 @@
 	//		}
 	// }
 	// Use 'postCreateCommand' to run commands after the container is created.
+	// FIXME: Install Pester, TaskJob, "chmod 755 "$PSHome/pwsh", see if we can get ssh PSRemoting working, build BinaryModule
 	// "postCreateCommand": "dotnet restore",
 	// Configure tool-specific properties.
 	// "customizations": {},

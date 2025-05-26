@@ -8,7 +8,7 @@ public sealed class ResetStaticStore : PSCmdlet
     protected override void EndProcessing()
     {
         StaticStore.StaticField = StaticStore._default;
-        RunspaceStore.GetFromTLS().RunspaceField = RunspaceStore._default;
+        RunspaceStore.GetFromRunspace().RunspaceField = RunspaceStore._default;
         ThreadLocalStore.TLSField = ThreadLocalStore._default;
     }
 }
