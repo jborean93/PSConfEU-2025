@@ -76,4 +76,27 @@ Describe "Runspace Overview" {
 
         $result.FullName | Should -Be $pwd.Path
     }
+
+    It "Has module imported through implicit remoting" {
+        $modulePath = Join-Path $PSScriptRoot 'ScriptModule'
+        $session = New-PSSession -UseWindowsPowerShell
+        try {
+            Import-Module -Name $modulePath -PSSession $session -Force
+
+            $result = Get-ComplexObject -Path $pwd.Path
+        }
+        finally {
+            $session | Remove-PSSession
+        }
+
+        $result.PSTypeNames[0] | Should -Be "Deserialized.System.IO.DirectoryInfo"
+
+        {
+            $result.Refresh()
+        } | Should -Throw -ExpectedMessage '*`[Deserialized.System.IO.DirectoryInfo] does not contain a method named ''Refresh''.'
+
+        $result -is [System.IO.Directory] | Should -BeFalse
+
+        $result.FullName | Should -Be $pwd.Path
+    }
 }

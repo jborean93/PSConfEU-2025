@@ -8,6 +8,7 @@
     Description = 'Example script module for showing runspace isolation'
     PowerShellVersion = '7.5'
     FunctionsToExport = @(
+        'Get-ComplexObject'
         'Get-ModuleValue'
         'Set-ModuleValue'
     )

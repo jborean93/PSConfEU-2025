@@ -1,5 +1,17 @@
 $script:InternalValue = 'default'
 
+Function Get-ComplexObject {
+    [OutputType([System.IO.DirectoryInfo])]
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [string]
+        $Path
+    )
+
+    Get-Item -LiteralPath $Path
+}
+
 Function Get-ModuleValue {
     [OutputType([string])]
     [CmdletBinding()]
@@ -18,4 +30,4 @@ Function Set-ModuleValue {
     $script:InternalValue = $Value
 }
 
-Export-ModuleMember -Function Get-ModuleValue, Set-ModuleValue
+Export-ModuleMember -Function Get-ComplexObject, Get-ModuleValue, Set-ModuleValue
