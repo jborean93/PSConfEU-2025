@@ -11,7 +11,11 @@
 				"pspester.pester-test",
 				"github.vscode-pull-request-github"
 			],
-			"settings": {}
+			"settings": {
+				"dotnet.defaultSolution": "PSConfEU-2025.slnx",
+				"powershell.pester.codeLens": false,
+				"powershell.pester.useLegacyCodeLens": false
+			}
 		}
 	}
 	// Features to add to the dev container. More info: https://containers.dev/features.
