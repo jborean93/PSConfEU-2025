@@ -154,7 +154,14 @@ Describe "Runspace do's and dont's" {
             )
         }
 
-        # TODO: Add delegate example to show how it can bomb with a pwsh scriptblock.
+        It ".NET Tasks fail if you try and run a ScriptBlock as a delegate" {
+            $task = [System.Threading.Tasks.Task]::Run([Action]{'foo'})
+            while (-not $task.AsyncWaitHandle.WaitOne(200)) {}
+
+            {
+                $task.GetAwaiter().GetResult()
+            } | Should -Throw -ExpectedMessage "*There is no Runspace available to run scripts in this thread*"
+        }
     }
 }
 
