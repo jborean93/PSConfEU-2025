@@ -1,3 +1,5 @@
+using namespace System.Management.Automation
+
 Describe "Practical parallel examples" {
     Context "CPU Bound Operations" {
         BeforeAll {
@@ -40,9 +42,15 @@ Describe "Practical parallel examples" {
 
     Context "IO Bound Operations" {
         BeforeAll {
+            $noInput = [PSDataCollection[object]]::new()
+            $noInput.Complete()
+            $settings = [PSInvocationSettings]@{
+                Host = $Host
+            }
+
             $ps = [PowerShell]::Create()
             $ps.AddCommand("$PSScriptRoot/TestWebServer.ps1").AddParameter('Port', 8080)
-            $webTask = $ps.BeginInvoke()
+            $webTask = $ps.BeginInvoke($noInput, $settings, $null, $null)
 
             $url = "http://localhost:8080"
             while ($true) {
@@ -74,14 +82,14 @@ Describe "Practical parallel examples" {
         It "Sends requests sequentially" {
             1..10 | ForEach-Object {
                 $sleep = Get-Random -Minimum 1 -Maximum 4
-                Invoke-WebRequest -Uri "$url/delay=$sleep" | Out-Null
+                Invoke-WebRequest -Uri "$url/id=$_&delay=$sleep" | Out-Null
             }
         }
 
         It "Sends requests in parallel" {
             1..10 | ForEach-Object -Parallel {
                 $sleep = Get-Random -Minimum 1 -Maximum 4
-                Invoke-WebRequest -Uri "$using:url/delay=$sleep" | Out-Null
+                Invoke-WebRequest -Uri "$using:url/id=$_&delay=$sleep" | Out-Null
             }
         }
     }
